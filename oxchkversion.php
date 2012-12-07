@@ -17,7 +17,7 @@
  */
 
 //Version of this file
-define("MYVERSION", '3.1.0');
+define("MYVERSION", '3.1.1');
 
 //WebService information
 define('WEBSERVICE_SCRIPT', 'http://oxchkversion.oxid-esales.com/webService.php');
@@ -37,190 +37,190 @@ define('DEBUG_OUTPUT', 0);
  * Interface which all classes here have to implement
  *
  *****************************************************************************/
-interface oxchkversion
+interface oeIOxchkversion
 {
-	/**
-	 * Main method
-	 *
-	 * @return null
-	 */
-	public function run();
+    /**
+     * Main method
+     *
+     * @return null
+     */
+    public function run();
 
-	/**
-	 * Returns result
-	 *
-	 * @return string
-	 */
-	public function getResult();
+    /**
+     * Returns result
+     *
+     * @return string
+     */
+    public function getResult();
 }
 
-class oxLanguage
+class oeLanguage
 {
-	private static $aLanguage = array(
-		'HTMLTemplate' 										=> '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"><html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-15"><title>OXID Check Version</title></head><body>%HTMLCONTENT%</body></html>',
-		'oxShopIntro_IntroInformation' 						=> '<h2>oxchkversion v %MYVERSION% at %MYURL% at %DATETIME%</h2><p>This script is intended to check consistency of your OXID eShop. It collects names of php files and templates, detects their MD5 checksum, connects for each file to OXID\'s webservice to determine if it fits this shop version.</p><p>It does neither collect nor transmit any license or personal information.</p><p>Data to be transmitted to OXID is:</p><ul><li>Filename to be checked</li><li>MD5 checksum</li><li>Version which was detected</li><li>Revision which was detected</li></ul><p>For more detailed information check out <a href="http://www.oxid-esales.com/de/news/blog/shop-checking-tool-oxchkversion-v3" target=_blank>OXID eSales\' Blog</a>.</p>%NEXTSTEP%',
-		'oxShopIntro_Form'									=> '<form action = ""><input type="hidden" name="job" value="checker" > <input type=checkbox name="listAllFiles" value="listAllFiles" id="listAllFiles"><label for="listAllFiles">List all files (also those which were OK)</label><br><br><input type="submit" name="" value=" Start to check this eShop right now (may take some time) " ></form>',
-		'oxShopIntro_ErrorMessageTemplate' 					=> '<p><font color="red"><b>These error(s) occured</b></font></p><ul>%ERRORS%</ul>',
-		'oxShopIntro_ErrorMessageCURLIsNotInstalled' 		=> '<li><font color="red">Please take care if the library cURL is installed!</font></li>',
-		'oxShopIntro_ErrorMessageWebServiceIsNotReachable' 	=> '<li><font color="red">WebService is not available currently. Please try again later.</font></li>',
-		'oxShopIntro_ErrorMessageWebServiceReturnedNoXML' 	=> '<li><font color="red">WebService returned not a XML.</font></li>',
-		'oxShopIntro_ErrorMessageVersionDoesNotExist' 		=> '<li><font color="red">OXID eShop %EDITION% %VERSION% in Revision %REVISION% does not exist.</font></li>',
-		'oxShopCheck_ModifiedHints1'						=> 'OXID eShop has sophisticated possibility to extend it by modules without changing shipped files. It\'s not recommended and not needed to change shop files. See also our <a href="http://www.oxidforge.org/wiki/Tutorials#How_to_Extend_OXID_eShop_With_Modules_.28Part_1.29" target=_blank>tutorials</a>.',
-		'oxShopCheck_ModifiedHints2'						=> 'Since OXID eShop 4.2.0 it\'s possible to use <a href="http://www.oxidforge.org/wiki/Downloads/4.2.0#New_Features" target=_blank>your own templates without changing shipped ones</a>.',
-		'oxShopCheck_VersionMismatchHints'					=> 'Apparently one or more updates went wrong. See details link for more information about more details for each file. A left over file which is not any longer included in OXID eShop could also be a <u>possible</u> reason for version mismatch. For more information see <a href="http://www.oxid-esales.com/en/resources/help-faq/manual-eshop-pe-ce-4-0-0-0/upgrade-update-eshop" target=_blank>handbook</a>.'
-	);
+    private static $aLanguage = array(
+        'HTMLTemplate'                                          => '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"><html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-15"><title>OXID Check Version</title></head><body>%HTMLCONTENT%</body></html>',
+        'oxShopIntro_IntroInformation'                          => '<h2>oxchkversion v %MYVERSION% at %MYURL% at %DATETIME%</h2><p>This script is intended to check consistency of your OXID eShop. It collects names of php files and templates, detects their MD5 checksum, connects for each file to OXID\'s webservice to determine if it fits this shop version.</p><p>It does neither collect nor transmit any license or personal information.</p><p>Data to be transmitted to OXID is:</p><ul><li>Filename to be checked</li><li>MD5 checksum</li><li>Version which was detected</li><li>Revision which was detected</li></ul><p>For more detailed information check out <a href="http://www.oxid-esales.com/de/news/blog/shop-checking-tool-oxchkversion-v3" target=_blank>OXID eSales\' Blog</a>.</p>%NEXTSTEP%',
+        'oxShopIntro_Form'                                      => '<form action = ""><input type="hidden" name="job" value="checker" > <input type=checkbox name="listAllFiles" value="listAllFiles" id="listAllFiles"><label for="listAllFiles">List all files (also those which were OK)</label><br><br><input type="submit" name="" value=" Start to check this eShop right now (may take some time) " ></form>',
+        'oxShopIntro_ErrorMessageTemplate'                      => '<p><font color="red"><b>These error(s) occured</b></font></p><ul>%ERRORS%</ul>',
+        'oxShopIntro_ErrorMessageCURLIsNotInstalled'            => '<li><font color="red">Please take care if the library cURL is installed!</font></li>',
+        'oxShopIntro_ErrorMessageWebServiceIsNotReachable'      => '<li><font color="red">WebService is not available currently. Please try again later.</font></li>',
+        'oxShopIntro_ErrorMessageWebServiceReturnedNoXML'       => '<li><font color="red">WebService returned not a XML.</font></li>',
+        'oxShopIntro_ErrorMessageVersionDoesNotExist'           => '<li><font color="red">OXID eShop %EDITION% %VERSION% in Revision %REVISION% does not exist.</font></li>',
+        'oxShopCheck_ModifiedHints1'                            => 'OXID eShop has sophisticated possibility to extend it by modules without changing shipped files. It\'s not recommended and not needed to change shop files. See also our <a href="http://www.oxidforge.org/wiki/Tutorials#How_to_Extend_OXID_eShop_With_Modules_.28Part_1.29" target=_blank>tutorials</a>.',
+        'oxShopCheck_ModifiedHints2'                            => 'Since OXID eShop 4.2.0 it\'s possible to use <a href="http://www.oxidforge.org/wiki/Downloads/4.2.0#New_Features" target=_blank>your own templates without changing shipped ones</a>.',
+        'oxShopCheck_VersionMismatchHints'                      => 'Apparently one or more updates went wrong. See details link for more information about more details for each file. A left over file which is not any longer included in OXID eShop could also be a <u>possible</u> reason for version mismatch. For more information see <a href="http://www.oxid-esales.com/en/resources/help-faq/manual-eshop-pe-ce-4-0-0-0/upgrade-update-eshop" target=_blank>handbook</a>.'
+    );
 
-	private function __construct() {}
+    private function __construct() {}
 
-	private function __clone() {}
+    private function __clone() {}
 
-	/**
-	 * @param $sPlaceHolder
-	 * @param $sContainer
-	 * @param $sLanguageKey
-	 * @return string
-	 */
-	public static function replacePlaceholder($sPlaceHolder, $sContainer, $sLanguageKey)
-	{
-		return (string) str_replace(
-			$sPlaceHolder,
-			$sContainer,
-			oxLanguage::getLanguageValueByKey($sLanguageKey)
-		);
-	}
+    /**
+     * @param $sPlaceHolder
+     * @param $sContainer
+     * @param $sLanguageKey
+     * @return string
+     */
+    public static function replacePlaceholder($sPlaceHolder, $sContainer, $sLanguageKey)
+    {
+        return (string) str_replace(
+            $sPlaceHolder,
+            $sContainer,
+            oeLanguage::getLanguageValueByKey($sLanguageKey)
+        );
+    }
 
-	/**
-	 * returns the value of the language array
-	 *
-	 * @param string $sKey
-	 * @return mixed
-	 */
-	public static function getLanguageValueByKey($sKey)
-	{
-		if (!array_key_exists($sKey, self::$aLanguage)) {
-			return 'Language value for key "'.$sKey.'" is missing!';
-		}
-		return self::$aLanguage[$sKey];
-	}
+    /**
+     * returns the value of the language array
+     *
+     * @param string $sKey
+     * @return mixed
+     */
+    public static function getLanguageValueByKey($sKey)
+    {
+        if (!array_key_exists($sKey, self::$aLanguage)) {
+            return 'Language value for key "'.$sKey.'" is missing!';
+        }
+        return self::$aLanguage[$sKey];
+    }
 }
 
 /*****************************************************************************/
 
 /**
- * Very base implememntation with some methods already implemented
+ * Very base implementation with some methods already implemented
  */
-abstract class oxchkversionBase implements oxchkversion
+abstract class oeOxchkversionBase implements oeIOxchkversion
 {
-	/**
-	 * constructor
-	 */
-	public function __construct()
-	{
-		require_once "config.inc.php";
-		mysql_connect($this->dbHost, $this->dbUser, $this->dbPwd) or die("can't connect");
-		mysql_select_db($this->dbName) or die("Can't select DB");
-	}
+    /**
+     * constructor
+     */
+    public function __construct()
+    {
+        require_once "config.inc.php";
+        mysql_connect($this->dbHost, $this->dbUser, $this->dbPwd) or die("can't connect");
+        mysql_select_db($this->dbName) or die("Can't select DB");
+    }
 
-	/**
-	 * Detects version in database
-	 *
-	 * @return string
-	 */
-	public function getVersion()
-	{
-		$res = mysql_query("select oxversion from oxshops limit 1");
-		$row = mysql_fetch_array($res);
-		return $row[0];
-	}
+    /**
+     * Detects version in database
+     *
+     * @return string
+     */
+    public function getVersion()
+    {
+        $res = mysql_query("select oxversion from oxshops limit 1");
+        $row = mysql_fetch_array($res);
+        return $row[0];
+    }
 
-	/**
-	 * Detects edition in this database
-	 *
-	 * @return string
-	 */
-	public function getEdition()
-	{
-		$sRetVal = '(unknown)';
+    /**
+     * Detects edition in this database
+     *
+     * @return string
+     */
+    public function getEdition()
+    {
+        $sRetVal = '(unknown)';
 
-		$res = mysql_query("select oxedition from oxshops limit 1");
+        $res = mysql_query("select oxedition from oxshops limit 1");
 
-		if (mysql_num_rows($res) > 0) {
-			$row = mysql_fetch_array($res);
-			$sRetVal = $row[0];
-		}
-		return $sRetVal;
-	}
+        if (mysql_num_rows($res) > 0) {
+            $row = mysql_fetch_array($res);
+            $sRetVal = $row[0];
+        }
+        return $sRetVal;
+    }
 
-	/**
-	 * Detects revision from pkg.rev
-	 *
-	 * @return string
-	 */
-	public function getRevision()
-	{
-		$sRevision = "";
+    /**
+     * Detects revision from pkg.rev
+     *
+     * @return string
+     */
+    public function getRevision()
+    {
+        $sRevision = "";
 
-		if (file_exists('pkg.rev')) {
-			$aRevision = file('pkg.rev');
-			$sRevision = trim($aRevision[0]);
-		}
-		return $sRevision;
-	}
+        if (file_exists('pkg.rev')) {
+            $aRevision = file('pkg.rev');
+            $sRevision = trim($aRevision[0]);
+        }
+        return $sRevision;
+    }
 
-	/**
-	 * Builds full webservice URL
-	 *
-	 * @param string $sJob      Job to execute, if needed
-	 * @param string $sVersion  Version to take, if needed
-	 * @param string $sRevision Revision to take, if needed
-	 * @param string $sEdition  Edition to take, if needed
-	 * @param string $sFile     Filename to take, if needed
-	 * @param string $sMD5      MD5 to take, if needed
-	 *
-	 * @return string Full URL
-	 */
-	public function getFullWebServiceURL($sJob = '', $sVersion = '', $sRevision = '', $sEdition = '', $sFile = '', $sMD5 = '')
-	{
-		$sWebservice_url = WEBSERVICE_URL;
+    /**
+     * Builds full webservice URL
+     *
+     * @param string $sJob      Job to execute, if needed
+     * @param string $sVersion  Version to take, if needed
+     * @param string $sRevision Revision to take, if needed
+     * @param string $sEdition  Edition to take, if needed
+     * @param string $sFile     Filename to take, if needed
+     * @param string $sMD5      MD5 to take, if needed
+     *
+     * @return string Full URL
+     */
+    public function getFullWebServiceURL($sJob = '', $sVersion = '', $sRevision = '', $sEdition = '', $sFile = '', $sMD5 = '')
+    {
+        $sWebservice_url = WEBSERVICE_URL;
 
-		$sWebservice_url = str_replace ('%MD5%',      urlencode($sMD5),      $sWebservice_url);
-		$sWebservice_url = str_replace ('%VERSION%',  urlencode($sVersion),  $sWebservice_url);
-		$sWebservice_url = str_replace ('%REVISION%', urlencode($sRevision), $sWebservice_url);
-		$sWebservice_url = str_replace ('%EDITION%',  urlencode($sEdition),  $sWebservice_url);
-		$sWebservice_url = str_replace ('%FILE%',     urlencode($sFile),     $sWebservice_url);
-		$sWebservice_url .= '&job='.urlencode($sJob);
+        $sWebservice_url = str_replace ('%MD5%',      urlencode($sMD5),      $sWebservice_url);
+        $sWebservice_url = str_replace ('%VERSION%',  urlencode($sVersion),  $sWebservice_url);
+        $sWebservice_url = str_replace ('%REVISION%', urlencode($sRevision), $sWebservice_url);
+        $sWebservice_url = str_replace ('%EDITION%',  urlencode($sEdition),  $sWebservice_url);
+        $sWebservice_url = str_replace ('%FILE%',     urlencode($sFile),     $sWebservice_url);
+        $sWebservice_url .= '&job='.urlencode($sJob);
 
-		return $sWebservice_url;
-	}
+        return $sWebservice_url;
+    }
 
-	/**
-	 * Gets _GET[$sParamName]
-	 *
-	 * @param string $sParamName Parameter to read from _GET
-	 *
-	 * @return string Parameter
-	 */
-	public function getParam($sParamName)
-	{
-		$sRetVal = '';
-		if (isset($_GET[$sParamName]) && !empty($_GET[$sParamName])) {
-			$sRetVal = $_GET[$sParamName];
-		}
-		return $sRetVal;
-	}
+    /**
+     * Gets _GET[$sParamName]
+     *
+     * @param string $sParamName Parameter to read from _GET
+     *
+     * @return string Parameter
+     */
+    public function getParam($sParamName)
+    {
+        $sRetVal = '';
+        if (isset($_GET[$sParamName]) && !empty($_GET[$sParamName])) {
+            $sRetVal = $_GET[$sParamName];
+        }
+        return $sRetVal;
+    }
 
-	/**
-	 * @param mixed $value output which has to log
-	 */
-	public function debug($mValue)
-	{
-		if (DEBUG) {
-			switch(DEBUG_OUTPUT) {
-				case 0: error_log($mValue); break;
-				case 1: error_log($mValue, 3, 'oxchkversion.log'); break;
-			}
-		}
-	}
+    /**
+     * @param mixed $value output which has to log
+     */
+    public function debug($mValue)
+    {
+        if (DEBUG) {
+            switch(DEBUG_OUTPUT) {
+                case 0: error_log($mValue); break;
+                case 1: error_log($mValue, 3, 'oxchkversion.log'); break;
+            }
+        }
+    }
 }
 
 /*****************************************************************************/
@@ -228,183 +228,178 @@ abstract class oxchkversionBase implements oxchkversion
 /**
  * Returns some intro information
  */
-class oxShopIntro extends oxchkversionBase
+class oeShopIntro extends oeOxchkversionBase
 {
-	/**
-	 * Error message for system requirements check
-	 *
-	 * @var string
-	 */
-	private $_sErrorMessage = "";
+    /**
+     * Error message for system requirements check
+     *
+     * @var string
+     */
+    private $_sErrorMessage = "";
 
-	/**
-	 * Contains if there was any error in initializing class
-	 *
-	 * @var bool
-	 */
-	private $_blError = false;
+    /**
+     * Contains if there was any error in initializing class
+     *
+     * @var bool
+     */
+    private $_blError = false;
 
-	/**
-	 * if curl is not installed, we do not have to check other sys requirements of cURL, therefore we can skip them.
-	 * 
-	 * @var bool
-	 */
-	private $_blCURLAvailable = false;
+    /**
+     * if curl is not installed, we do not have to check other sys requirements of cURL, therefore we can skip them.
+     *
+     * @var bool
+     */
+    private $_blCURLAvailable = false;
 
-	/**
-	 * Constructor
-	 *
-	 * @return void
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-		$this->checkSystemRequirements();
-	}
+    public function __construct()
+    {
+        parent::__construct();
+        $this->checkSystemRequirements();
+    }
 
-	/**
-	 * Checks system requirements and builds error messages if there are some
-	 *
-	 * @return void
-	 */
-	public function checkSystemRequirements()
-	{
-		$this->_checkIfCURLIsInstalled();
+    /**
+     * Checks system requirements and builds error messages if there are some
+     *
+     * @return void
+     */
+    public function checkSystemRequirements()
+    {
+        $this->_checkIfCURLIsInstalled();
 
-		if ($this->_blCURLAvailable) {
-			$this->_checkIfWebServiceServerIsReachable();
-			$this->_checkIfWeGetXML();
-		}
-		$this->_checkIfShopVersionIsKnown();
-	}
+        if ($this->_blCURLAvailable) {
+            $this->_checkIfWebServiceServerIsReachable();
+            $this->_checkIfWeGetXML();
+        }
+        $this->_checkIfShopVersionIsKnown();
+    }
 
-	/**
-	 * checks if curl is installed or not
-	 * @return void
-	 */
-	private function _checkIfCURLIsInstalled()
-	{
-		if (!function_exists('curl_init')) {
-			$this->_blError = true;
-			$this->_sErrorMessage = oxLanguage::getLanguageValueByKey('oxShopIntro_ErrorMessageCURLIsNotInstalled');
-		} else {
-			$this->_blCURLAvailable = true;
-		}
-	}
-
-	/**
-	 * check if we get a result back
-	 * @return void
-	 */
-	private function _checkIfWebServiceServerIsReachable()
-	{
-		$sWebservice_url = $this->getFullWebServiceURL('ping');
-
-		$curl = curl_init();
-		curl_setopt($curl,CURLOPT_URL, $sWebservice_url);
-		curl_setopt($curl,CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt($curl,CURLOPT_CONNECTTIMEOUT, CURL_TIMEOUT);
-		$sXML = curl_exec($curl);
-
-		if (empty($sXML)) {
-			$this->_blError = true;
-			$this->_sErrorMessage = oxLanguage::getLanguageValueByKey('oxShopIntro_ErrorMessageWebServiceIsNotReachable');
-		}
-	}
-
-	/**
-	 * in case if a general error is thrown by webservice
-	 * @return void
-	 */
-	private function _checkIfWeGetXML()
-	{
-		$sWebservice_url = $this->getFullWebServiceURL('ping');
-
-		$curl = curl_init();
-		curl_setopt($curl,CURLOPT_URL, $sWebservice_url);
-		curl_setopt($curl,CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt($curl,CURLOPT_CONNECTTIMEOUT, CURL_TIMEOUT);
-		$sXML = curl_exec($curl);
-
-		try {
-			new SimpleXMLElement($sXML);
-		} catch (Exception $ex) {
-			$this->_blError = true;
-			$this->_sErrorMessage = oxLanguage::getLanguageValueByKey('oxShopIntro_ErrorMessageWebServiceReturnedNoXML');
-		}
-	}
-
-	/**
-	 * asks the webservice, if the shop version is known.
-	 * @return void
-	 */
-	private function _checkIfShopVersionIsKnown()
-	{
-		$sVersion   = $this->getVersion();
-		$sEdition   = $this->getEdition();
-		$sRevision  = $this->getRevision();
-
-		$sURL = $this->getFullWebServiceURL('existsversion', $sVersion, $sRevision, $sEdition);
-
-		if ($sXML = @file_get_contents($sURL)) {
-			$oXML = new SimpleXMLElement($sXML);
-			if ($oXML->exists == 0) {
-				$this->_blError = true;
-				$sError = oxLanguage::getLanguageValueByKey('oxShopIntro_ErrorMessageVersionDoesNotExist');
-
-				$sError = str_replace ('%EDITION%', $sEdition, $sError);
-				$sError = str_replace ('%VERSION%', $sVersion, $sError);
-				$sError = str_replace ('%REVISION%', $sRevision, $sError);
-
-				$this->_sErrorMessage .= $sError;
-			}
-		}
-	}
-
-	/**
-	 * Main method
-	 *
-	 * @return null
-	 */
-	public function run() {}
+    /**
+     * Main method
+     *
+     * @return null
+     */
+    public function run() {}
 
 
-	/**
-	 * Returns result of classes operations
-	 *
-	 * @return string
-	 */
-	public function getResult()
-	{
-		$sMessage = oxLanguage::replacePlaceholder('%HTMLCONTENT%', oxLanguage::getLanguageValueByKey('oxShopIntro_IntroInformation'), 'HTMLTemplate');
-		$sMessage = str_replace ('%MYVERSION%', MYVERSION, $sMessage);
+    /**
+     * Returns result of classes operations
+     *
+     * @return string
+     */
+    public function getResult()
+    {
+        $sMessage = oeLanguage::replacePlaceholder('%HTMLCONTENT%', oeLanguage::getLanguageValueByKey('oxShopIntro_IntroInformation'), 'HTMLTemplate');
+        $sMessage = str_replace ('%MYVERSION%', MYVERSION, $sMessage);
 
-		$sMyUrl = $this->_buildFullURL();
-		$sMyUrl = '<a href="'.$sMyUrl.'">'.$sMyUrl."</a>";
-		$sMessage = str_replace ('%MYURL%', $sMyUrl, $sMessage);
+        $sMyUrl = $this->_buildFullURL();
+        $sMyUrl = '<a href="'.$sMyUrl.'">'.$sMyUrl."</a>";
+        $sMessage = str_replace ('%MYURL%', $sMyUrl, $sMessage);
 
-		$sDateTime = date('Y-m-d H:i:s', time());
-		$sMessage = str_replace ('%DATETIME%', $sDateTime, $sMessage);
+        $sDateTime = date('Y-m-d H:i:s', time());
+        $sMessage = str_replace ('%DATETIME%', $sDateTime, $sMessage);
 
-		if (!$this->_blError) {
-			$sMessage = str_replace('%NEXTSTEP%', oxLanguage::getLanguageValueByKey('oxShopIntro_Form'), $sMessage);
-		} else {
-			// first build complete error text from template + specific errors
-			$sError = oxLanguage::replacePlaceholder('%ERRORS%', $this->_sErrorMessage, 'oxShopIntro_ErrorMessageTemplate');
+        if (!$this->_blError) {
+            $sMessage = str_replace('%NEXTSTEP%', oeLanguage::getLanguageValueByKey('oxShopIntro_Form'), $sMessage);
+        } else {
+            // first build complete error text from template + specific errors
+            $sError = oeLanguage::replacePlaceholder('%ERRORS%', $this->_sErrorMessage, 'oxShopIntro_ErrorMessageTemplate');
 
-			// then insert error tag where button should be
-			$sMessage = str_replace('%NEXTSTEP%', $sError, $sMessage);
-		}
-		return $sMessage;
-	}
+            // then insert error tag where button should be
+            $sMessage = str_replace('%NEXTSTEP%', $sError, $sMessage);
+        }
+        return $sMessage;
+    }
 
-	/**
-	 * @return string
-	 */
-	private function _buildFullURL()
-	{
-		return 'http://'.$_SERVER['SERVER_NAME'].$_SERVER['SCRIPT_NAME'];
-	}
+    /**
+     * checks if curl is installed or not
+     * @return void
+     */
+    private function _checkIfCURLIsInstalled()
+    {
+        if (!function_exists('curl_init')) {
+            $this->_blError = true;
+            $this->_sErrorMessage = oeLanguage::getLanguageValueByKey('oxShopIntro_ErrorMessageCURLIsNotInstalled');
+        } else {
+            $this->_blCURLAvailable = true;
+        }
+    }
+
+    /**
+     * check if we get a result back
+     * @return void
+     */
+    private function _checkIfWebServiceServerIsReachable()
+    {
+        $sWebservice_url = $this->getFullWebServiceURL('ping');
+
+        $curl = curl_init();
+        curl_setopt($curl,CURLOPT_URL, $sWebservice_url);
+        curl_setopt($curl,CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl,CURLOPT_CONNECTTIMEOUT, CURL_TIMEOUT);
+        $sXML = curl_exec($curl);
+
+        if (empty($sXML)) {
+            $this->_blError = true;
+            $this->_sErrorMessage = oeLanguage::getLanguageValueByKey('oxShopIntro_ErrorMessageWebServiceIsNotReachable');
+        }
+    }
+
+    /**
+     * in case if a general error is thrown by webservice
+     * @return void
+     */
+    private function _checkIfWeGetXML()
+    {
+        $sWebservice_url = $this->getFullWebServiceURL('ping');
+
+        $curl = curl_init();
+        curl_setopt($curl,CURLOPT_URL, $sWebservice_url);
+        curl_setopt($curl,CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl,CURLOPT_CONNECTTIMEOUT, CURL_TIMEOUT);
+        $sXML = curl_exec($curl);
+
+        try {
+            new SimpleXMLElement($sXML);
+        } catch (Exception $ex) {
+            $this->_blError = true;
+            $this->_sErrorMessage = oeLanguage::getLanguageValueByKey('oxShopIntro_ErrorMessageWebServiceReturnedNoXML');
+        }
+    }
+
+    /**
+     * asks the webservice, if the shop version is known.
+     * @return void
+     */
+    private function _checkIfShopVersionIsKnown()
+    {
+        $sVersion   = $this->getVersion();
+        $sEdition   = $this->getEdition();
+        $sRevision  = $this->getRevision();
+
+        $sURL = $this->getFullWebServiceURL('existsversion', $sVersion, $sRevision, $sEdition);
+
+        if ($sXML = @file_get_contents($sURL)) {
+            $oXML = new SimpleXMLElement($sXML);
+            if ($oXML->exists == 0) {
+                $this->_blError = true;
+                $sError = oeLanguage::getLanguageValueByKey('oxShopIntro_ErrorMessageVersionDoesNotExist');
+
+                $sError = str_replace ('%EDITION%', $sEdition, $sError);
+                $sError = str_replace ('%VERSION%', $sVersion, $sError);
+                $sError = str_replace ('%REVISION%', $sRevision, $sError);
+
+                $this->_sErrorMessage .= $sError;
+            }
+        }
+    }
+
+    /**
+     * @return string
+     */
+    private function _buildFullURL()
+    {
+        return 'http://'.$_SERVER['SERVER_NAME'].$_SERVER['SCRIPT_NAME'];
+    }
 }
 
 /*****************************************************************************/
@@ -413,351 +408,351 @@ class oxShopIntro extends oxchkversionBase
  * This one collects to be checked files, checks each file and prints
  * result of checks
  */
-class oxShopCheck extends oxchkversionBase
+class oeShopCheck extends oeOxchkversionBase
 {
-	/**
-	 * For table's contents
-	 *
-	 * @var string
-	 */
-	private $_sTableContent = "";
+    /**
+     * For table's contents
+     *
+     * @var string
+     */
+    private $_sTableContent = "";
 
-	/**
-	 * Array of all files which are to be checked
-	 *
-	 * @var array
-	 */
-	private $_aFiles = array();
+    /**
+     * Array of all files which are to be checked
+     *
+     * @var array
+     */
+    private $_aFiles = array();
 
-	/**
-	 * Edition of THIS OXID eShop - detected automatically
-	 *
-	 * @var string
-	 */
-	private $_sEdition = "";
+    /**
+     * Edition of THIS OXID eShop - detected automatically
+     *
+     * @var string
+     */
+    private $_sEdition = "";
 
-	/**
-	 * Version of THIS OXID eShop - detected automatically
-	 *
-	 * @var string
-	 */
-	private $_sVersion = "";
+    /**
+     * Version of THIS OXID eShop - detected automatically
+     *
+     * @var string
+     */
+    private $_sVersion = "";
 
-	/**
-	 * Revision of THIS OXID eShop - detected automatically
-	 *
-	 * @var string
-	 */
-	private $_sRevision = "";
+    /**
+     * Revision of THIS OXID eShop - detected automatically
+     *
+     * @var string
+     */
+    private $_sRevision = "";
 
-	/**
-	 * Full Version tag of this OXID eShop
-	 *
-	 * @var string
-	 */
-	private $_sVersionTag = "";
+    /**
+     * Full Version tag of this OXID eShop
+     *
+     * @var string
+     */
+    private $_sVersionTag = "";
 
-	/**
-	 * Counts number of matches for each type of result
-	 *
-	 * @var array
-	 */
-	private $_aResultCount = array();
+    /**
+     * Counts number of matches for each type of result
+     *
+     * @var array
+     */
+    private $_aResultCount = array();
 
-	/**
-	 * If the variable is true, the script will show all files, even they are ok.
-	 *
-	 * @var bool
-	 */
-	private $_blListAllFiles = false;
-
-
-	/**
-	 * Class constructor
-	 *
-	 * @return void
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-
-		$this->_getOXIDFiles();
-		$this->_sVersion   = $this->getVersion();
-		$this->_sEdition   = $this->getEdition();
-		$this->_sRevision  = $this->getRevision();
-		$this->_sVersionTag = $this->_sEdition."_".$this->_sVersion."_".$this->_sRevision;
-
-		if ( $this->getParam('listAllFiles') == 'listAllFiles' ) {
-			$this->_blListAllFiles = true;
-		}
-
-		$sDateTime = date('Y-m-d H:i:s', time());
-
-		$sMyUrl = 'http://'.$_SERVER['SERVER_NAME'].$_SERVER['SCRIPT_NAME'];
-		$sMyUrl = '<a href="'.$sMyUrl.'">'.$sMyUrl."</a>";
-
-		$this->_sTableContent .= "<tr><td colspan=2><h2>oxchkversion v ".MYVERSION." detected at ".$sMyUrl." at ".$sDateTime."</h2></td></tr>".PHP_EOL;
-		$this->_sTableContent .= "<tr><td><b>Edition</b></td><td>$this->_sEdition</td></tr>".PHP_EOL;
-		$this->_sTableContent .= "<tr><td><b>Version</b></td><td>$this->_sVersion</td></tr>".PHP_EOL;
-		$this->_sTableContent .= "<tr><td><b>Revision</b></td><td>$this->_sRevision</td></tr>".PHP_EOL;
-
-		$this->_aResultCount['OK'] = 0;
-		$this->_aResultCount['VERSIONMISMATCH'] = 0;
-		$this->_aResultCount['UNKNOWN'] = 0;
-		$this->_aResultCount['MODIFIED'] = 0;
-
-		$this->sResultOutput = "";
-		$this->_blShopIsOK = true;
-	}
-
-	/**
-	 * Selects important directors and returns files in there
-	 *
-	 * @return array
-	 */
-	private function _getOXIDFiles()
-	{
-		$this->_addFile('bootstrap.php');
-		$this->_addFile('index.php');
-		$this->_addFile('oxseo.php');
-
-		$aToCheckingFolders = array(
-			'admin/',
-			'application/',
-			'bin/',
-			'core/',
-			'modules/',
-			'views/',
-			//we need here the specific path because we do not want to scan the custom theme folders
-			'out/basic/',
-			'out/admin/',
-			'out/azure/',
-			'out/downloads/',
-			'out/media/',
-			'out/pictures/'
-		);
-
-		foreach ($aToCheckingFolders as $sFolder) {
-			$this->_collectFiles($sFolder);
-		}
-	}
-
-	/**
-	 * adds one file to the "has to check all files in this array" array
-	 *
-	 * @param string $sFile
-	 */
-	private function _addFile($sFile)
-	{
-		if (is_file($sFile)) {
-			$this->debug('collecting: '.$sFile);
-			$this->_aFiles[] = $sFile;
-		}
-	}
-
-	/**
-	 * browse all folder and subfolders after files which have the extension php, tpl or js
-	 *
-	 * @param string $sFolder which has to explorer
-	 * @throws exception
-	 * @return void
-	 */
-	private function _collectFiles($sFolder)
-	{
-		if (empty($sFolder)) {
-			throw new Exception('$folder variable is empty!');
-		}
-
-		if (!is_dir($sFolder)) {
-			return;
-		}
-		$handle = opendir($sFolder);
-
-		while ($sFile = readdir($handle)) {
-
-			if ($sFile != "." && $sFile != "..") {
-
-				if (is_dir($sFolder.$sFile))  {
-					$this->_collectFiles($sFolder.$sFile.'/');
-				} else {
-					$sExt = substr( strrchr($sFile, '.'), 1);
-
-					//if ($ext == 'php' || $ext == 'tpl' || $ext == 'js') {
-					if ($sExt == 'php' || $sExt == 'tpl') {
-						$this->_addFile($sFolder.$sFile);
-					}
-				}
-			}
-		}
-		closedir($handle);
-	}
-
-	/**
-	 * Queries checksum-webservice according to md5, version, revision, edition and filename
-	 *
-	 * @param string $sMD5  MD5 to check
-	 * @param string $sFile File to check
-	 *
-	 * @return SimpleXMLElement
-	 */
-	private function _getFilesVersion($sMD5, $sFile)
-	{
-		$sXML = $this->_getDataByCURL($sMD5, $sFile);
-		return new SimpleXMLElement($sXML);
-	}
-
-	/**
-	 * Queries checksum-webservice according webservice url and its parameters by curl
-	 *
-	 * @param string $sMD5  MD5 to check
-	 * @param string $sFile File to check
-	 *
-	 * @return string
-	 */
-	private function _getDataByCURL($sMD5, $sFile)
-	{
-		$sWebservice_url = $this->getFullWebServiceURL('md5check', $this->_sVersion, $this->_sRevision, $this->_sEdition, $sFile, $sMD5);
-		$this->debug('sending: '.$sWebservice_url);
-
-		$curl = curl_init();
-		curl_setopt($curl,CURLOPT_URL, $sWebservice_url);
-		curl_setopt($curl,CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt($curl,CURLOPT_CONNECTTIMEOUT, CURL_TIMEOUT);
-		$sXML = curl_exec($curl);
-		curl_close($curl);
-		return $sXML;
-	}
-
-	/**
-	 * Main method
-	 *
-	 * @return void
-	 */
-	public function run()
-	{
-		$resultCache = array();
-
-		foreach ( $this->_aFiles as $sFile) {
-
-			$sMD5 = md5_file ( $sFile );
-			$oXML = null;
-
-			while (!is_object($oXML)) {
-				usleep(100);
-				$this->debug('sending: '.$sFile);
-				$oXML = $this->_getFilesVersion($sMD5, $sFile);
-				$resultCache[] = $oXML;
-				$this->debug('got: '.$oXML->res);
-			}
-		}
-
-		foreach ($resultCache as $oXML) {
-
-			$sColor = "blue";
-			$sMessage = "This text is not supposed to be here. Please try again. If it still appears, call OXID support.";
-
-			if (is_object($oXML)) {
-
-				if ($oXML->res == 'OK') {
-					// If recognized, still can be source or snapshot
-					$aMatch = array();
-
-					if (preg_match ('/(SOURCE|SNAPSHOT)/', $oXML->pkg, $aMatch)) {
-						$this->_blShopIsOK = false;
-						$sMessage = 'SOURCE|SNAPSHOT';
-						$sColor = 'red';
-					} else {
-						$sMessage = '';
-						if ( $this->_blListAllFiles ) {
-							$sMessage = 'OK';
-						}
-						$sColor = "green";
-					}
-				} elseif ($oXML->res == 'VERSIONMISMATCH') {
-					$sMessage = 'Version mismatch';
-					$sColor = 'red';
-					$this->_blShopIsOK = false;
-				} elseif ($oXML->res == 'MODIFIED') {
-					$sMessage = 'Modified';
-					$sColor = 'red';
-					$this->_blShopIsOK = false;
-				} elseif ($oXML->res == 'UNKNOWN') {
-					$sMessage = '';
-					$sColor = "green";
-				}
-				$this->_aResultCount[strval($oXML->res)]++;
-			}
-
-			if ($sMessage) {
-				$this->sResultOutput .= "<tr><td>".$oXML->fil."</td>";
-				$this->sResultOutput .= "<td>";
-				$this->sResultOutput .= "<b><font color=\"$sColor\">";
-				$this->sResultOutput .= $sMessage;
-				$this->sResultOutput .= "</font></b>";
-				$this->sResultOutput .= "</td></tr>".PHP_EOL;
-			}
-		}
-	}
-
-	/**
-	 * Returns result of classes operations
-	 *
-	 * @return string
-	 */
-	public function getResult()
-	{
-		// first build summary table
-		$this->_sTableContent .=  "<tr><td><b>&nbsp;</b></td><td>&nbsp;</td></tr>".PHP_EOL;
-		$this->_sTableContent .=  "<tr><td colspan=\"2\"><h2>Summary</h2></td></tr>".PHP_EOL;
-		$this->_sTableContent .=  "<tr><td><b>OK</b></td><td>".$this->_aResultCount['OK']."</td></tr>".PHP_EOL;
-		$this->_sTableContent .=  "<tr><td><b>Modified</b></td><td>".$this->_aResultCount['MODIFIED']."</td></tr>".PHP_EOL;
-		$this->_sTableContent .=  "<tr><td><b>Version mismatch</b></td><td>".$this->_aResultCount['VERSIONMISMATCH']."</td></tr>".PHP_EOL;
-		$this->_sTableContent .=  "<tr><td><b>Unknown</b></td><td>".$this->_aResultCount['UNKNOWN']."</td></tr>".PHP_EOL;
-		$this->_sTableContent .=  "<tr><td><b>Number of investigated files in total:</b>   </td><td>".count($this->_aFiles)."</td></tr>".PHP_EOL;
-
-		$this->_sTableContent .= "<tr><td><b>&nbsp;</b></td><td>&nbsp;</td></tr>".PHP_EOL;
-		if ($this->_blShopIsOK) {
-			$this->_sTableContent .= "<tr><td colspan=2><b><font color=\"green\">This OXID eShop was not modified and is fully original.</font></b></td></tr>".PHP_EOL;
-		} else {
-			$this->_sTableContent .= "<tr><td colspan=2><b><font color=\"red\">This OXID eShop does not fit 100% ".$this->_sVersionTag.".</font></b></td></tr>".PHP_EOL;
-		}
-
-		$sHints = "";
-		if ($this->_aResultCount['MODIFIED'] > 0) {
-			$sHints .=  "<tr><td colspan=\"2\">* ".oxLanguage::getLanguageValueByKey('oxShopCheck_ModifiedHints1')."</td></tr>".PHP_EOL;
-			$sHints .=  "<tr><td colspan=\"2\">* ".oxLanguage::getLanguageValueByKey('oxShopCheck_ModifiedHints2')."</td></tr>".PHP_EOL;
-		}
-
-		if ($this->_aResultCount['VERSIONMISMATCH'] > 0) {
-			$sHints .=  "<tr><td colspan=\"2\">* ".oxLanguage::getLanguageValueByKey('oxShopCheck_VersionMismatchHints')."</td></tr>".PHP_EOL;
-		}
-
-		if ($sHints) {
-			$this->_sTableContent .=  "<tr><td colspan=\"2\"><b>&nbsp;</b></td></tr>".PHP_EOL;
-			$this->_sTableContent .=  "<tr><td colspan=\"2\"><h2>Hints</h2>   </td></tr>".PHP_EOL;
-			$this->_sTableContent .= $sHints;
-		}
+    /**
+     * If the variable is true, the script will show all files, even they are ok.
+     *
+     * @var bool
+     */
+    private $_blListAllFiles = false;
 
 
-		// then print result output
-		if ($this->sResultOutput) {
-			$this->_sTableContent .=  "<tr><td><b>&nbsp;</b></td><td>&nbsp;</td></tr>".PHP_EOL;
-			$this->_sTableContent .=  $this->sResultOutput;
-		}
+    /**
+     * Class constructor
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        parent::__construct();
 
-		$this->_sTableContent = "<table>".PHP_EOL.$this->_sTableContent.PHP_EOL."</table>";
+        $this->_getOXIDFiles();
+        $this->_sVersion   = $this->getVersion();
+        $this->_sEdition   = $this->getEdition();
+        $this->_sRevision  = $this->getRevision();
+        $this->_sVersionTag = $this->_sEdition."_".$this->_sVersion."_".$this->_sRevision;
 
-		return str_replace ('%HTMLCONTENT%', $this->_sTableContent, oxLanguage::getLanguageValueByKey('HTMLTemplate'));
-	}
+        if ( $this->getParam('listAllFiles') == 'listAllFiles' ) {
+            $this->_blListAllFiles = true;
+        }
+
+        $sDateTime = date('Y-m-d H:i:s', time());
+
+        $sMyUrl = 'http://'.$_SERVER['SERVER_NAME'].$_SERVER['SCRIPT_NAME'];
+        $sMyUrl = '<a href="'.$sMyUrl.'">'.$sMyUrl."</a>";
+
+        $this->_sTableContent .= "<tr><td colspan=2><h2>oxchkversion v ".MYVERSION." detected at ".$sMyUrl." at ".$sDateTime."</h2></td></tr>".PHP_EOL;
+        $this->_sTableContent .= "<tr><td><b>Edition</b></td><td>$this->_sEdition</td></tr>".PHP_EOL;
+        $this->_sTableContent .= "<tr><td><b>Version</b></td><td>$this->_sVersion</td></tr>".PHP_EOL;
+        $this->_sTableContent .= "<tr><td><b>Revision</b></td><td>$this->_sRevision</td></tr>".PHP_EOL;
+
+        $this->_aResultCount['OK'] = 0;
+        $this->_aResultCount['VERSIONMISMATCH'] = 0;
+        $this->_aResultCount['UNKNOWN'] = 0;
+        $this->_aResultCount['MODIFIED'] = 0;
+
+        $this->sResultOutput = "";
+        $this->_blShopIsOK = true;
+    }
+
+    /**
+     * Main method
+     *
+     * @return void
+     */
+    public function run()
+    {
+        $resultCache = array();
+
+        foreach ( $this->_aFiles as $sFile) {
+
+            $sMD5 = md5_file ( $sFile );
+            $oXML = null;
+
+            while (!is_object($oXML)) {
+                usleep(100);
+                $this->debug('sending: '.$sFile);
+                $oXML = $this->_getFilesVersion($sMD5, $sFile);
+                $resultCache[] = $oXML;
+                $this->debug('got: '.$oXML->res);
+            }
+        }
+
+        foreach ($resultCache as $oXML) {
+
+            $sColor = "blue";
+            $sMessage = "This text is not supposed to be here. Please try again. If it still appears, call OXID support.";
+
+            if (is_object($oXML)) {
+
+                if ($oXML->res == 'OK') {
+                    // If recognized, still can be source or snapshot
+                    $aMatch = array();
+
+                    if (preg_match ('/(SOURCE|SNAPSHOT)/', $oXML->pkg, $aMatch)) {
+                        $this->_blShopIsOK = false;
+                        $sMessage = 'SOURCE|SNAPSHOT';
+                        $sColor = 'red';
+                    } else {
+                        $sMessage = '';
+                        if ( $this->_blListAllFiles ) {
+                            $sMessage = 'OK';
+                        }
+                        $sColor = "green";
+                    }
+                } elseif ($oXML->res == 'VERSIONMISMATCH') {
+                    $sMessage = 'Version mismatch';
+                    $sColor = 'red';
+                    $this->_blShopIsOK = false;
+                } elseif ($oXML->res == 'MODIFIED') {
+                    $sMessage = 'Modified';
+                    $sColor = 'red';
+                    $this->_blShopIsOK = false;
+                } elseif ($oXML->res == 'UNKNOWN') {
+                    $sMessage = '';
+                    $sColor = "green";
+                }
+                $this->_aResultCount[strval($oXML->res)]++;
+            }
+
+            if ($sMessage) {
+                $this->sResultOutput .= "<tr><td>".$oXML->fil."</td>";
+                $this->sResultOutput .= "<td>";
+                $this->sResultOutput .= "<b><font color=\"$sColor\">";
+                $this->sResultOutput .= $sMessage;
+                $this->sResultOutput .= "</font></b>";
+                $this->sResultOutput .= "</td></tr>".PHP_EOL;
+            }
+        }
+    }
+
+    /**
+     * Returns result of classes operations
+     *
+     * @return string
+     */
+    public function getResult()
+    {
+        // first build summary table
+        $this->_sTableContent .=  "<tr><td><b>&nbsp;</b></td><td>&nbsp;</td></tr>".PHP_EOL;
+        $this->_sTableContent .=  "<tr><td colspan=\"2\"><h2>Summary</h2></td></tr>".PHP_EOL;
+        $this->_sTableContent .=  "<tr><td><b>OK</b></td><td>".$this->_aResultCount['OK']."</td></tr>".PHP_EOL;
+        $this->_sTableContent .=  "<tr><td><b>Modified</b></td><td>".$this->_aResultCount['MODIFIED']."</td></tr>".PHP_EOL;
+        $this->_sTableContent .=  "<tr><td><b>Version mismatch</b></td><td>".$this->_aResultCount['VERSIONMISMATCH']."</td></tr>".PHP_EOL;
+        $this->_sTableContent .=  "<tr><td><b>Unknown</b></td><td>".$this->_aResultCount['UNKNOWN']."</td></tr>".PHP_EOL;
+        $this->_sTableContent .=  "<tr><td><b>Number of investigated files in total:</b>   </td><td>".count($this->_aFiles)."</td></tr>".PHP_EOL;
+
+        $this->_sTableContent .= "<tr><td><b>&nbsp;</b></td><td>&nbsp;</td></tr>".PHP_EOL;
+        if ($this->_blShopIsOK) {
+            $this->_sTableContent .= "<tr><td colspan=2><b><font color=\"green\">This OXID eShop was not modified and is fully original.</font></b></td></tr>".PHP_EOL;
+        } else {
+            $this->_sTableContent .= "<tr><td colspan=2><b><font color=\"red\">This OXID eShop does not fit 100% ".$this->_sVersionTag.".</font></b></td></tr>".PHP_EOL;
+        }
+
+        $sHints = "";
+        if ($this->_aResultCount['MODIFIED'] > 0) {
+            $sHints .=  "<tr><td colspan=\"2\">* ".oeLanguage::getLanguageValueByKey('oxShopCheck_ModifiedHints1')."</td></tr>".PHP_EOL;
+            $sHints .=  "<tr><td colspan=\"2\">* ".oeLanguage::getLanguageValueByKey('oxShopCheck_ModifiedHints2')."</td></tr>".PHP_EOL;
+        }
+
+        if ($this->_aResultCount['VERSIONMISMATCH'] > 0) {
+            $sHints .=  "<tr><td colspan=\"2\">* ".oeLanguage::getLanguageValueByKey('oxShopCheck_VersionMismatchHints')."</td></tr>".PHP_EOL;
+        }
+
+        if ($sHints) {
+            $this->_sTableContent .=  "<tr><td colspan=\"2\"><b>&nbsp;</b></td></tr>".PHP_EOL;
+            $this->_sTableContent .=  "<tr><td colspan=\"2\"><h2>Hints</h2>   </td></tr>".PHP_EOL;
+            $this->_sTableContent .= $sHints;
+        }
+
+
+        // then print result output
+        if ($this->sResultOutput) {
+            $this->_sTableContent .=  "<tr><td><b>&nbsp;</b></td><td>&nbsp;</td></tr>".PHP_EOL;
+            $this->_sTableContent .=  $this->sResultOutput;
+        }
+
+        $this->_sTableContent = "<table>".PHP_EOL.$this->_sTableContent.PHP_EOL."</table>";
+
+        return str_replace ('%HTMLCONTENT%', $this->_sTableContent, oeLanguage::getLanguageValueByKey('HTMLTemplate'));
+    }
+
+    /**
+     * Selects important directors and returns files in there
+     *
+     * @return array
+     */
+    private function _getOXIDFiles()
+    {
+        $this->_addFile('bootstrap.php');
+        $this->_addFile('index.php');
+        $this->_addFile('oxseo.php');
+
+        $aToCheckingFolders = array(
+            'admin/',
+            'application/',
+            'bin/',
+            'core/',
+            'modules/',
+            'views/',
+            //we need here the specific path because we do not want to scan the custom theme folders
+            'out/basic/',
+            'out/admin/',
+            'out/azure/',
+            'out/downloads/',
+            'out/media/',
+            'out/pictures/'
+        );
+
+        foreach ($aToCheckingFolders as $sFolder) {
+            $this->_collectFiles($sFolder);
+        }
+    }
+
+    /**
+     * adds one file to the "has to check all files in this array" array
+     *
+     * @param string $sFile
+     */
+    private function _addFile($sFile)
+    {
+        if (is_file($sFile)) {
+            $this->debug('collecting: '.$sFile);
+            $this->_aFiles[] = $sFile;
+        }
+    }
+
+    /**
+     * browse all folders and sub-folders after files which have the extension php, tpl or js
+     *
+     * @param string $sFolder which has to explorer
+     * @throws exception
+     * @return void
+     */
+    private function _collectFiles($sFolder)
+    {
+        if (empty($sFolder)) {
+            throw new Exception('$folder variable is empty!');
+        }
+
+        if (!is_dir($sFolder)) {
+            return;
+        }
+        $handle = opendir($sFolder);
+
+        while ($sFile = readdir($handle)) {
+
+            if ($sFile != "." && $sFile != "..") {
+
+                if (is_dir($sFolder.$sFile))  {
+                    $this->_collectFiles($sFolder.$sFile.'/');
+                } else {
+                    $sExt = substr( strrchr($sFile, '.'), 1);
+
+                    //if ($ext == 'php' || $ext == 'tpl' || $ext == 'js') {
+                    if ($sExt == 'php' || $sExt == 'tpl') {
+                        $this->_addFile($sFolder.$sFile);
+                    }
+                }
+            }
+        }
+        closedir($handle);
+    }
+
+    /**
+     * Queries checksum-webservice according to md5, version, revision, edition and filename
+     *
+     * @param string $sMD5  MD5 to check
+     * @param string $sFile File to check
+     *
+     * @return SimpleXMLElement
+     */
+    private function _getFilesVersion($sMD5, $sFile)
+    {
+        $sXML = $this->_getDataByCURL($sMD5, $sFile);
+        return new SimpleXMLElement($sXML);
+    }
+
+    /**
+     * Queries checksum-webservice according webservice url and its parameters by curl
+     *
+     * @param string $sMD5  MD5 to check
+     * @param string $sFile File to check
+     *
+     * @return string
+     */
+    private function _getDataByCURL($sMD5, $sFile)
+    {
+        $sWebservice_url = $this->getFullWebServiceURL('md5check', $this->_sVersion, $this->_sRevision, $this->_sEdition, $sFile, $sMD5);
+        $this->debug('sending: '.$sWebservice_url);
+
+        $curl = curl_init();
+        curl_setopt($curl,CURLOPT_URL, $sWebservice_url);
+        curl_setopt($curl,CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl,CURLOPT_CONNECTTIMEOUT, CURL_TIMEOUT);
+        $sXML = curl_exec($curl);
+        curl_close($curl);
+        return $sXML;
+    }
 }
 
 /**
  * Main program
  */
 if (!empty($_GET['job'])) {
-	$oOxchkversion = new oxShopCheck();
+    $oOxchkversion = new oeShopCheck();
 } else {
-	$oOxchkversion = new oxShopIntro();
+    $oOxchkversion = new oeShopIntro();
 }
 
 $oOxchkversion->run();
