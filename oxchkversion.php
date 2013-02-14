@@ -17,7 +17,7 @@
  */
 
 //Version of this file
-define("MYVERSION", '3.1.1');
+define("MYVERSION", '3.1.2');
 
 //WebService information
 define('WEBSERVICE_SCRIPT', 'http://oxchkversion.oxid-esales.com/webService.php');
@@ -216,8 +216,8 @@ abstract class oeOxchkversionBase implements oeIOxchkversion
     {
         if (DEBUG) {
             switch(DEBUG_OUTPUT) {
-                case 0: error_log($mValue); break;
-                case 1: error_log($mValue, 3, 'oxchkversion.log'); break;
+                case 0: error_log($mValue . PHP_EOL); break;
+                case 1: error_log($mValue . PHP_EOL, 3, 'oxchkversion.log'); break;
             }
         }
     }
@@ -559,7 +559,7 @@ class oeShopCheck extends oeOxchkversionBase
                     $sColor = 'red';
                     $this->_blShopIsOK = false;
                 } elseif ($oXML->res == 'UNKNOWN') {
-                    $sMessage = '';
+                    $sMessage = 'Unknown';
                     $sColor = "green";
                 }
                 $this->_aResultCount[strval($oXML->res)]++;
@@ -568,9 +568,9 @@ class oeShopCheck extends oeOxchkversionBase
             if ($sMessage) {
                 $this->sResultOutput .= "<tr><td>".$oXML->fil."</td>";
                 $this->sResultOutput .= "<td>";
-                $this->sResultOutput .= "<b><font color=\"$sColor\">";
+                $this->sResultOutput .= "<b style=\"color:$sColor\">";
                 $this->sResultOutput .= $sMessage;
-                $this->sResultOutput .= "</font></b>";
+                $this->sResultOutput .= "</b>";
                 $this->sResultOutput .= "</td></tr>".PHP_EOL;
             }
         }
