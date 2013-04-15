@@ -574,52 +574,54 @@ class oeShopCheck extends oeOxchkversionBase
 
         foreach ($resultCache as $oXML) {
 
-            $sColor = "blue";
-            $sMessage = oeLanguage::getLanguageValueByKey('oxShopIntro_ErrorVersionCompare');
-
             if (is_object($oXML)) {
+                $sColor = "blue";
+                $sMessage = oeLanguage::getLanguageValueByKey('oxShopIntro_ErrorVersionCompare');
 
-                if ($oXML->res == 'OK') {
-                    // If recognized, still can be source or snapshot
-                    $aMatch = array();
+                if (is_object($oXML)) {
 
-                    if (preg_match ('/(SOURCE|SNAPSHOT)/', $oXML->pkg, $aMatch)) {
-                        $this->_blShopIsOK = false;
-                        $sMessage = 'SOURCE|SNAPSHOT';
-                        $sColor = 'red';
-                    } else {
-                        $sMessage = '';
-                        if ( $this->_blListAllFiles ) {
-                            $sMessage = 'OK';
+                    if ($oXML->res == 'OK') {
+                        // If recognized, still can be source or snapshot
+                        $aMatch = array();
+
+                        if (preg_match ('/(SOURCE|SNAPSHOT)/', $oXML->pkg, $aMatch)) {
+                            $this->_blShopIsOK = false;
+                            $sMessage = 'SOURCE|SNAPSHOT';
+                            $sColor = 'red';
+                        } else {
+                            $sMessage = '';
+                            if ( $this->_blListAllFiles ) {
+                                $sMessage = 'OK';
+                            }
+                            $sColor = "green";
                         }
+                    } elseif ($oXML->res == 'VERSIONMISMATCH') {
+                        $sMessage = 'Version mismatch';
+                        $sColor = 'red';
+                        $this->_blShopIsOK = false;
+                    } elseif ($oXML->res == 'MODIFIED') {
+                        $sMessage = 'Modified';
+                        $sColor = 'red';
+                        $this->_blShopIsOK = false;
+                    } elseif ($oXML->res == 'OBSOLETE') {
+                        $sMessage = 'Obsolete';
+                        $sColor = 'red';
+                        $this->_blShopIsOK = false;
+                    } elseif ($oXML->res == 'UNKNOWN') {
+                        $sMessage = 'Unknown';
                         $sColor = "green";
                     }
-                } elseif ($oXML->res == 'VERSIONMISMATCH') {
-                    $sMessage = 'Version mismatch';
-                    $sColor = 'red';
-                    $this->_blShopIsOK = false;
-                } elseif ($oXML->res == 'MODIFIED') {
-                    $sMessage = 'Modified';
-                    $sColor = 'red';
-					$this->_blShopIsOK = false;
-                } elseif ($oXML->res == 'OBSOLETE') {
-                    $sMessage = 'Obsolete';
-                    $sColor = 'red';
-                    $this->_blShopIsOK = false;
-                } elseif ($oXML->res == 'UNKNOWN') {
-                    $sMessage = 'Unknown';
-                    $sColor = "green";
+                    $this->_aResultCount[strval($oXML->res)]++;
                 }
-                $this->_aResultCount[strval($oXML->res)]++;
-            }
 
-            if ($sMessage) {
-                $this->sResultOutput .= "<tr><td>".$oXML->fil."</td>";
-                $this->sResultOutput .= "<td>";
-                $this->sResultOutput .= "<b style=\"color:$sColor\">";
-                $this->sResultOutput .= $sMessage;
-                $this->sResultOutput .= "</b>";
-                $this->sResultOutput .= "</td></tr>".PHP_EOL;
+                if ($sMessage) {
+                    $this->sResultOutput .= "<tr><td>".$oXML->fil."</td>";
+                    $this->sResultOutput .= "<td>";
+                    $this->sResultOutput .= "<b style=\"color:$sColor\">";
+                    $this->sResultOutput .= $sMessage;
+                    $this->sResultOutput .= "</b>";
+                    $this->sResultOutput .= "</td></tr>".PHP_EOL;
+                }
             }
         }
     }
@@ -766,7 +768,13 @@ class oeShopCheck extends oeOxchkversionBase
     private function _getFilesVersion($sMD5, $sFile)
     {
         $sXML = $this->_getDataByCURL($sMD5, $sFile);
-        return new SimpleXMLElement($sXML);
+        $oXML = null;
+        try {
+            $oXML = new SimpleXMLElement($sXML);
+        } catch (Exception $ex) {
+            $oXML = null;
+        }
+        return $oXML;
     }
 
     /**
