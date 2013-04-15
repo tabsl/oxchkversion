@@ -17,10 +17,10 @@
  */
 
 //Version of this file
-define("MYVERSION", '3.2.0');
+define("MYVERSION", '3.2.1');
 
 //WebService information
-define('WEBSERVICE_SCRIPT', 'http://oxchkversion.oxid-esales.com/webService_beta.php');
+define('WEBSERVICE_SCRIPT', 'http://oxchkversion.oxid-esales.com/webService.php');
 define('WEBSERVICE_URL', WEBSERVICE_SCRIPT.'?md5=%MD5%&ver=%VERSION%&rev=%REVISION%&edi=%EDITION%&fil=%FILE%');
 define('CURL_TIMEOUT', 30);
 
