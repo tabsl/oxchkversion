@@ -17,10 +17,10 @@
  */
 
 //Version of this file
-define("MYVERSION", '3.1.2');
+define("MYVERSION", '3.2.0');
 
 //WebService information
-define('WEBSERVICE_SCRIPT', 'http://oxchkversion.oxid-esales.com/webService.php');
+define('WEBSERVICE_SCRIPT', 'http://oxchkversion.oxid-esales.com/webService_beta.php');
 define('WEBSERVICE_URL', WEBSERVICE_SCRIPT.'?md5=%MD5%&ver=%VERSION%&rev=%REVISION%&edi=%EDITION%&fil=%FILE%');
 define('CURL_TIMEOUT', 30);
 
@@ -29,7 +29,7 @@ define('DEBUG', false);
 
 //0 log output is send to setted php error log file
 //1 log file is at the same place where the oxchkversion file is. Its name is oxchkversion.log
-define('DEBUG_OUTPUT', 0);
+define('DEBUG_OUTPUT', 1);
 
 
 /*****************************************************************************
@@ -58,13 +58,15 @@ class oeLanguage
 {
     private static $aLanguage = array(
         'HTMLTemplate'                                          => '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"><html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-15"><title>OXID Check Version</title></head><body>%HTMLCONTENT%</body></html>',
-        'oxShopIntro_IntroInformation'                          => '<h2>oxchkversion v %MYVERSION% at %MYURL% at %DATETIME%</h2><p>This script is intended to check consistency of your OXID eShop. It collects names of php files and templates, detects their MD5 checksum, connects for each file to OXID\'s webservice to determine if it fits this shop version.</p><p>It does neither collect nor transmit any license or personal information.</p><p>Data to be transmitted to OXID is:</p><ul><li>Filename to be checked</li><li>MD5 checksum</li><li>Version which was detected</li><li>Revision which was detected</li></ul><p>For more detailed information check out <a href="http://www.oxid-esales.com/de/news/blog/shop-checking-tool-oxchkversion-v3" target=_blank>OXID eSales\' Blog</a>.</p>%NEXTSTEP%',
+        'oxShopIntro_IntroInformation'                          => '<h2>oxchkversion v %MYVERSION% at %MYURL% at %DATETIME%</h2><p>This script is intended to check consistency of your OXID eShop. It collects names of php files and templates, detects their MD5 checksum, connects for each file to OXID\'s webservice to determine if it fits this shop version.</p><p>It does neither collect nor transmit any license or personal information.</p><p>Data to be transmitted to OXID is:</p><ul><li>Filename to be checked</li><li>MD5 checksum</li><li>Version which was detected</li><li>Revision which was detected</li></ul><p>For more detailed information check out <a href="http://www.oxid-esales.com/de/news/blog/shop-checking-tool-oxchkversion-v3" target=_blank>OXID eSales\' Blog</a>.</p><p>%NEWVERSION%</p>%NEXTSTEP%',
         'oxShopIntro_Form'                                      => '<form action = ""><input type="hidden" name="job" value="checker" > <input type=checkbox name="listAllFiles" value="listAllFiles" id="listAllFiles"><label for="listAllFiles">List all files (also those which were OK)</label><br><br><input type="submit" name="" value=" Start to check this eShop right now (may take some time) " ></form>',
+        'oxShopIntro_LinkToExchange'                            => '<b><ins><a>The latest version of our checker tool is available for free from our OXID eXchange. We recommend to download it for a more precise result. Please get the latest Oxchkversion at <a href="http://exchange.oxid-esales.com/de/OXID/Weitere-OXID-Extensions/">OXID Exchange.</a></ins></b>',
         'oxShopIntro_ErrorMessageTemplate'                      => '<p><font color="red"><b>These error(s) occured</b></font></p><ul>%ERRORS%</ul>',
         'oxShopIntro_ErrorMessageCURLIsNotInstalled'            => '<li><font color="red">Please take care if the library cURL is installed!</font></li>',
         'oxShopIntro_ErrorMessageWebServiceIsNotReachable'      => '<li><font color="red">WebService is not available currently. Please try again later.</font></li>',
         'oxShopIntro_ErrorMessageWebServiceReturnedNoXML'       => '<li><font color="red">WebService returned not a XML.</font></li>',
         'oxShopIntro_ErrorMessageVersionDoesNotExist'           => '<li><font color="red">OXID eShop %EDITION% %VERSION% in Revision %REVISION% does not exist.</font></li>',
+        'oxShopIntro_ErrorVersionCompare'                       => 'This text is not supposed to be here. Please try again. If it still appears, call OXID support.',
         'oxShopCheck_ModifiedHints1'                            => 'OXID eShop has sophisticated possibility to extend it by modules without changing shipped files. It\'s not recommended and not needed to change shop files. See also our <a href="http://www.oxidforge.org/wiki/Tutorials#How_to_Extend_OXID_eShop_With_Modules_.28Part_1.29" target=_blank>tutorials</a>.',
         'oxShopCheck_ModifiedHints2'                            => 'Since OXID eShop 4.2.0 it\'s possible to use <a href="http://www.oxidforge.org/wiki/Downloads/4.2.0#New_Features" target=_blank>your own templates without changing shipped ones</a>.',
         'oxShopCheck_VersionMismatchHints'                      => 'Apparently one or more updates went wrong. See details link for more information about more details for each file. A left over file which is not any longer included in OXID eShop could also be a <u>possible</u> reason for version mismatch. For more information see <a href="http://www.oxid-esales.com/en/resources/help-faq/manual-eshop-pe-ce-4-0-0-0/upgrade-update-eshop" target=_blank>handbook</a>.'
@@ -210,7 +212,7 @@ abstract class oeOxchkversionBase implements oeIOxchkversion
     }
 
     /**
-     * @param mixed $value output which has to log
+     * @param $mValue output which has to log
      */
     public function debug($mValue)
     {
@@ -251,6 +253,16 @@ class oeShopIntro extends oeOxchkversionBase
      */
     private $_blCURLAvailable = false;
 
+    /**
+     * trigger if the script should announce a new version of it
+     *
+     * @var bool
+     */
+    private $_blIsThereANewVersion = false;
+
+    /**
+     *
+     */
     public function __construct()
     {
         parent::__construct();
@@ -269,6 +281,7 @@ class oeShopIntro extends oeOxchkversionBase
         if ($this->_blCURLAvailable) {
             $this->_checkIfWebServiceServerIsReachable();
             $this->_checkIfWeGetXML();
+            $this->_checkOxchkversionVersion();
         }
         $this->_checkIfShopVersionIsKnown();
     }
@@ -290,6 +303,12 @@ class oeShopIntro extends oeOxchkversionBase
     {
         $sMessage = oeLanguage::replacePlaceholder('%HTMLCONTENT%', oeLanguage::getLanguageValueByKey('oxShopIntro_IntroInformation'), 'HTMLTemplate');
         $sMessage = str_replace ('%MYVERSION%', MYVERSION, $sMessage);
+
+        if ($this->_blIsThereANewVersion) {
+            $sMessage = str_replace ('%NEWVERSION%', oeLanguage::getLanguageValueByKey('oxShopIntro_LinkToExchange'), $sMessage);
+        } else {
+            $sMessage = str_replace ('%NEWVERSION%', '', $sMessage);
+        }
 
         $sMyUrl = $this->_buildFullURL();
         $sMyUrl = '<a href="'.$sMyUrl.'">'.$sMyUrl."</a>";
@@ -350,6 +369,7 @@ class oeShopIntro extends oeOxchkversionBase
      */
     private function _checkIfWeGetXML()
     {
+        $oXML = null;
         $sWebservice_url = $this->getFullWebServiceURL('ping');
 
         $curl = curl_init();
@@ -359,10 +379,38 @@ class oeShopIntro extends oeOxchkversionBase
         $sXML = curl_exec($curl);
 
         try {
-            new SimpleXMLElement($sXML);
+            $oXML = new SimpleXMLElement($sXML);
         } catch (Exception $ex) {
             $this->_blError = true;
             $this->_sErrorMessage = oeLanguage::getLanguageValueByKey('oxShopIntro_ErrorMessageWebServiceReturnedNoXML');
+        }
+
+        if (!is_object($oXML)) {
+            $this->_sErrorMessage .= oeLanguage::getLanguageValueByKey('oxShopIntro_ErrorMessageVersionDoesNotExist');
+        }
+    }
+
+    /**
+     * @todo description
+     */
+    private function _checkOxchkversionVersion()
+    {
+        $sURL = $this->getFullWebServiceURL('checkversion', MYVERSION);
+
+        $curl = curl_init();
+        curl_setopt($curl,CURLOPT_URL, $sURL);
+        curl_setopt($curl,CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl,CURLOPT_CONNECTTIMEOUT, CURL_TIMEOUT);
+        $sXML = curl_exec($curl);
+        curl_close($curl);
+
+        try {
+            $oXML = new SimpleXMLElement($sXML);
+
+            $this->_blIsThereANewVersion = (bool) ((int) $oXML->latest) ? 1 : 0;
+        } catch (Exception $ex) {
+            $this->_blError = true;
+            $this->_sErrorMessage = oeLanguage::getLanguageValueByKey('oxShopIntro_ErrorVersionCompare');
         }
     }
 
@@ -466,11 +514,8 @@ class oeShopCheck extends oeOxchkversionBase
      */
     private $_blListAllFiles = false;
 
-
     /**
-     * Class constructor
      *
-     * @return void
      */
     public function __construct()
     {
@@ -521,7 +566,6 @@ class oeShopCheck extends oeOxchkversionBase
 
             while (!is_object($oXML)) {
                 usleep(100);
-                $this->debug('sending: '.$sFile);
                 $oXML = $this->_getFilesVersion($sMD5, $sFile);
                 $resultCache[] = $oXML;
                 $this->debug('got: '.$oXML->res);
@@ -531,7 +575,7 @@ class oeShopCheck extends oeOxchkversionBase
         foreach ($resultCache as $oXML) {
 
             $sColor = "blue";
-            $sMessage = "This text is not supposed to be here. Please try again. If it still appears, call OXID support.";
+            $sMessage = oeLanguage::getLanguageValueByKey('oxShopIntro_ErrorVersionCompare');
 
             if (is_object($oXML)) {
 
@@ -556,6 +600,10 @@ class oeShopCheck extends oeOxchkversionBase
                     $this->_blShopIsOK = false;
                 } elseif ($oXML->res == 'MODIFIED') {
                     $sMessage = 'Modified';
+                    $sColor = 'red';
+					$this->_blShopIsOK = false;
+                } elseif ($oXML->res == 'OBSOLETE') {
+                    $sMessage = 'Obsolete';
                     $sColor = 'red';
                     $this->_blShopIsOK = false;
                 } elseif ($oXML->res == 'UNKNOWN') {
@@ -636,6 +684,7 @@ class oeShopCheck extends oeOxchkversionBase
     {
         $this->_addFile('bootstrap.php');
         $this->_addFile('index.php');
+        $this->_addFile('oxid.php');
         $this->_addFile('oxseo.php');
 
         $aToCheckingFolders = array(
@@ -649,9 +698,6 @@ class oeShopCheck extends oeOxchkversionBase
             'out/basic/',
             'out/admin/',
             'out/azure/',
-            'out/downloads/',
-            'out/media/',
-            'out/pictures/'
         );
 
         foreach ($aToCheckingFolders as $sFolder) {
